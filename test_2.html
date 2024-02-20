@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send POST Request and Show Progress</title>
+    <style>
+        /* Basic styling for the progress bar */
+        #progressBarContainer {
+            width: 100%;
+            background-color: #ddd;
+        }
+
+        #progressBar {
+            width: 1%;
+            height: 30px;
+            background-color: #4CAF50;
+            text-align: center; /* Center the text */
+            line-height: 30px; /* Use the same height to vertically align text */
+            color: white; /* White text color */
+        }
+    </style>
+</head>
+<body>
+    <button id="sendRequest">Send POST Request</button>
+    <div id="progressBarContainer">
+        <div id="progressBar">0%</div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        // Connect to the WebSocket
+        var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+        socket.on('ffmpeg_progress', function(msg) {
+            // Update the progress bar width and text
+            var progressBar = document.getElementById("progressBar");
+            progressBar.style.width = msg.data + '%';
+            progressBar.textContent = msg.data + '%';
+        });
+
+        document.getElementById("sendRequest").addEventListener("click", function() {
+            const url = 'http://127.0.0.1:8080'; // Replace with your Flask app's endpoint
+            const payload = {
+               // "video_link": "https://www.youtube.com/watch?v=t0BfccmKKDI",
+               "video_link": "https://quick-translates.s3.amazonaws.com/user_uploads/13babe8d90ed4451afb42453adfa013f.mp4",
+                "srt_file_content": "1\n00:00:00.000 --> 00:00:07.000\nI need you so, there's no time, I'll never go 123\n    \n2\n00:00:07.000 --> 00:00:11.000\nOh I cannot explain, every time it's the same\n    \n3\n00:00:11.000 --> 00:00:13.000\nOh I feel that it's real\n    \n4\n00:00:13.000 --> 00:00:17.000\nTake my heart, I've been lonely too long\n    \n5\n00:00:17.000 --> 00:00:21.000\nOh I can't be so strong, take a chance for a man\n    \n6\n00:00:21.000 --> 00:00:25.000\nTake my heart, I need you so\n    \n7\n00:00:25.000 --> 00:00:31.000\nThere's no time, I'll never go\n    \n8\n00:00:31.000 --> 00:00:35.000\nSherry Sherry Lady, go into a motion\n    \n9\n00:00:35.000 --> 00:00:39.000\nLove is where you find it, listen to your heart\n    \n10\n00:00:39.000 --> 00:00:43.000\nSherry Sherry Lady, living in devotion\n    \n11\n00:00:43.000 --> 00:00:47.000\nYou know it's like the first time, let me take a part\n    \n...",
+                "s3_youtube_flag": "s3"
+            };
+                
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

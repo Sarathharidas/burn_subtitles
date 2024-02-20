@@ -1,11 +1,12 @@
-FROM python:3.8-slim-buster
+FROM python:3.9-slim-buster
 
 WORKDIR /app
 
 COPY requirements.txt .
 
+# Install ffmpeg and curl
 RUN apt-get update && \
-    apt-get install -y ffmpeg && \
+    apt-get install -y ffmpeg curl && \
     pip install --trusted-host pypi.python.org -r requirements.txt
 
 COPY . /app

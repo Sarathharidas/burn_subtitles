@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send POST Request</title>
+</head>
+<body>
+    <button id="sendRequest">Send POST Request</button>
+
+    <script>
+        document.getElementById("sendRequest").addEventListener("click", function() {
+            const url = 'https://save-subtiles-2-l4365sddta-uc.a.run.app';
+            const payload = {
+                'folder_name': '1e9f29ccc7524a939fae7dceebfe6ef8',
+                'txt_file_content':'sample text file content-2',
+                'srt_file_content'  : 'srt_content-2',
+            };
+                
+            fetch(url, {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
